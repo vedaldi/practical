@@ -47,7 +47,7 @@ doc/instructions.html : doc/instructions.md doc/base.css $(MDIR)/base.html $(MDI
 	python -m markdown \
 	  -x toc -x footnotes -x tables -x fenced_code -x attr_list \
 	  "$<" ; \
-	cat "$(MDIR)/end.html") >> "$@"
+	cat "$(MDIR)/end.html") > "$@"
 
 doc/base.css: $(MDIR)/base.css
 	cp -f "$(<)" "$(@)"
