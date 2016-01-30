@@ -1,5 +1,9 @@
 .PHONY: prepack, pack, pack-data, pack-code, post, clean, distclean, doc
 
+# install markdown and python-markdown-math
+# pip install --user markdown
+# pip install --user python-markdown-math
+
 CURRENT_MAKEFILE_LIST := $(MAKEFILE_LIST)
 MDIR := $(dir $(lastword $(CURRENT_MAKEFILE_LIST)))
 $(warning $(MAKEFILE_LIST))
@@ -45,7 +49,7 @@ $(TMPDIR)/$(name)-code-only.tar.gz: $(deps)
 doc/instructions.html : doc/instructions.md doc/base.css doc/prism.js doc/prism.css $(MDIR)/base.html $(MDIR)/end.html $(MDIR)/Makefile
 	(cat "$(MDIR)/base.html" ; \
 	python -m markdown \
-	  -x toc -x footnotes -x tables -x fenced_code -x attr_list \
+	  -x toc -x footnotes -x tables -x fenced_code -x attr_list -x mdx_math \
 	  "$<" ; \
 	cat "$(MDIR)/end.html") > "$@"
 

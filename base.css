@@ -28,20 +28,32 @@ h1 {
     margin: .67em 0
 }
 
-code, pre {
-    font-family: monospace, serif;
-    font-size: 1em ;
-    color: blue ;
+code {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1.5px solid #e0e0e0;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+  color: #00f ;
+}
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap;
+  border: none;
+  background: transparent;
 }
 
 pre {
-    white-space: pre-wrap
+
 }
 
 blockquote {
-    background-color: #fee ;
+    background-color: #eef ;
     padding: 0.5em ;
     margin-left: 0px ;
     margin-right: 0px ;
-    border-left: 10px solid #edd ;
+    border-left: 10px solid #dde ;
 }
