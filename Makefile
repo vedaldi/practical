@@ -4,6 +4,7 @@
 # pip install --user markdown
 # pip install --user python-markdown-math
 
+SHELL := /bin/bash
 CURRENT_MAKEFILE_LIST := $(MAKEFILE_LIST)
 MDIR := $(dir $(lastword $(CURRENT_MAKEFILE_LIST)))
 $(warning $(MAKEFILE_LIST))
@@ -11,40 +12,42 @@ $(warning $(MAKEFILE_LIST))
 pack-all: pack-data pack-code pack
 doc: doc/instructions.html
 
-tarflags=--exclude='.git*'
+tarflags=--exclude='.git*' --exclude='.build*' --exclude='matconvnet/local' --exclude='*~'
 
 DST := vgg@login.robots.ox.ac.uk:WWW/share
-DSTDOC := vgg@login.robots.ox.ac.uk:WWW/practicals/$(name)
+DSTDOC := vgg@login.robots.ox.ac.uk:WWW/practicals/$(subst practical-,,$(name))
+TMPDIR := /tmp
 
+distname:=$(name)-$(ver)
 code:=$(addprefix $(CURDIR)/,$(code))
 data:=$(addprefix $(CURDIR)/,$(data))
 doc:=$(addprefix $(CURDIR)/,$(doc))
 deps:=$(shell find $(code) $(doc) $(data) -type f | sed "s/ /\\\\ /g")
 
-pack: $(TMPDIR)/$(name).tar.gz
-pack-data: $(TMPDIR)/$(name)-data-only.tar.gz
-pack-code: $(TMPDIR)/$(name)-code-only.tar.gz
+pack: $(TMPDIR)/$(distname).tar.gz
+pack-data: $(TMPDIR)/$(distname)-data-only.tar.gz
+pack-code: $(TMPDIR)/$(distname)-code-only.tar.gz
 
-$(TMPDIR)/$(name).tar.gz: $(deps)
-	rm -rf $(TMPDIR)/$(name)
-	mkdir -p $(TMPDIR)/$(name)/{doc,data}
-	ln -sf $(data) $(TMPDIR)/$(name)/data/
-	ln -sf $(doc) $(TMPDIR)/$(name)/doc/
-	ln -sf $(code) $(TMPDIR)/$(name)/
-	tar -C $(TMPDIR) -czvhf $(TMPDIR)/$(name).tar.gz $(tarflags) $(name)/
+$(TMPDIR)/$(distname).tar.gz: $(deps)
+	rm -rf $(TMPDIR)/$(distname)
+	mkdir -p $(TMPDIR)/$(distname)/{doc,data}
+	ln -sf $(data) $(TMPDIR)/$(distname)/data/
+	ln -sf $(doc) $(TMPDIR)/$(distname)/doc/
+	ln -sf $(code) $(TMPDIR)/$(distname)/
+	tar -C $(TMPDIR) -czvhf $(TMPDIR)/$(distname).tar.gz $(tarflags) $(distname)/
 
-$(TMPDIR)/$(name)-data-only.tar.gz: $(deps)
-	rm -rf $(TMPDIR)/$(name)
-	mkdir -p $(TMPDIR)/$(name)/{doc,data}
-	ln -sf $(data) $(TMPDIR)/$(name)/
-	tar -C $(TMPDIR) -czvhf $(TMPDIR)/$(name)-data-only.tar.gz $(tarflags) $(name)/
+$(TMPDIR)/$(distname)-data-only.tar.gz: $(deps)
+	rm -rf $(TMPDIR)/$(distname)
+	mkdir -p $(TMPDIR)/$(distname)/{doc,data}
+	ln -sf $(data) $(TMPDIR)/$(distname)/
+	tar -C $(TMPDIR) -czvhf $(TMPDIR)/$(distname)-data-only.tar.gz $(tarflags) $(distname)/
 
-$(TMPDIR)/$(name)-code-only.tar.gz: $(deps)
-	rm -rf $(TMPDIR)/$(name)
-	mkdir -p $(TMPDIR)/$(name)/{doc,data}
-	ln -sf $(doc) $(TMPDIR)/$(name)/doc/
-	ln -sf $(code) $(TMPDIR)/$(name)/
-	tar -C $(TMPDIR) -czvhf $(TMPDIR)/$(name)-code-only.tar.gz $(tarflags) $(name)/
+$(TMPDIR)/$(distname)-code-only.tar.gz: $(deps)
+	rm -rf $(TMPDIR)/$(distname)
+	mkdir -p $(TMPDIR)/$(distname)/{doc,data}
+	ln -sf $(doc) $(TMPDIR)/$(distname)/doc/
+	ln -sf $(code) $(TMPDIR)/$(distname)/
+	tar -C $(TMPDIR) -czvhf $(TMPDIR)/$(distname)-code-only.tar.gz $(tarflags) $(distname)/
 
 doc/instructions.html : doc/instructions.md doc/base.css doc/prism.js doc/prism.css $(MDIR)/base.html $(MDIR)/end.html $(MDIR)/Makefile
 	(cat "$(MDIR)/base.html" ; \
@@ -57,16 +60,16 @@ doc/%: $(MDIR)/%
 	cp -f "$(<)" "$(@)"
 
 post-doc: doc
-	rsync -rvt doc/images "$(DSTDOC)/"
+	rsync -rvt doc/images doc/base.css doc/prism.css doc/prism.js "$(DSTDOC)/"
 	rsync -vt doc/instructions.html "$(DSTDOC)/index.html"
 
 post: pack-all
-	rsync -vt "$(TMPDIR)/$(name).tar.gz" "$(DST)/"
-	rsync -vt "$(TMPDIR)/$(name)-data-only.tar.gz" "$(DST)/"
-	rsync -vt "$(TMPDIR)/$(name)-code-only.tar.gz" "$(DST)/"
+	rsync -vt "$(TMPDIR)/$(distname).tar.gz" "$(DST)/"
+	rsync -vt "$(TMPDIR)/$(distname)-data-only.tar.gz" "$(DST)/"
+	rsync -vt "$(TMPDIR)/$(distname)-code-only.tar.gz" "$(DST)/"
 
 clean:
 	find . -name '*~' -delete
 
 distclean: clean
-	rm -f $(TMPDIR)/$(name)*.tar.gz
+	rm -f $(TMPDIR)/$(distname)*.tar.gz
