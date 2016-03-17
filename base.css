@@ -25,7 +25,8 @@ a:active, a:hover {
 
 h1 {
     font-size: 2em;
-    margin: .67em 0
+    margin: .67em 0 ;
+    line-height: 1.2em ;
 }
 
 code {
