@@ -34,20 +34,20 @@ $(TMPDIR)/$(distname).tar.gz: $(deps)
 	ln -sf $(data) $(TMPDIR)/$(distname)/data/
 	ln -sf $(doc) $(TMPDIR)/$(distname)/doc/
 	ln -sf $(code) $(TMPDIR)/$(distname)/
-	tar -C $(TMPDIR) -czvhf $(TMPDIR)/$(distname).tar.gz $(tarflags) $(distname)/
+	tar -C $(TMPDIR) -cvh $(tarflags) $(distname)/ | gzip -n >$(TMPDIR)/$(distname).tar.gz
 
 $(TMPDIR)/$(distname)-data-only.tar.gz: $(deps)
 	rm -rf $(TMPDIR)/$(distname)
 	mkdir -p $(TMPDIR)/$(distname)/{doc,data}
 	ln -sf $(data) $(TMPDIR)/$(distname)/data/
-	tar -C $(TMPDIR) -czvhf $(TMPDIR)/$(distname)-data-only.tar.gz $(tarflags) $(distname)/
+	tar -C $(TMPDIR) -cvh $(tarflags) $(distname)/ | gzip -n >$(TMPDIR)/$(distname)-data-only.tar.gz 
 
 $(TMPDIR)/$(distname)-code-only.tar.gz: $(deps)
 	rm -rf $(TMPDIR)/$(distname)
 	mkdir -p $(TMPDIR)/$(distname)/{doc,data}
 	ln -sf $(doc) $(TMPDIR)/$(distname)/doc/
 	ln -sf $(code) $(TMPDIR)/$(distname)/
-	tar -C $(TMPDIR) -czvhf $(TMPDIR)/$(distname)-code-only.tar.gz $(tarflags) $(distname)/
+	tar -C $(TMPDIR) -cvh $(tarflags) $(distname)/ | gzip -n >$(TMPDIR)/$(distname)-code-only.tar.gz
 
 doc/instructions.html : doc/instructions.md doc/base.css doc/prism.js doc/prism.css $(MDIR)/base.html $(MDIR)/end.html $(MDIR)/Makefile
 	(cat "$(MDIR)/base.html" ; \
