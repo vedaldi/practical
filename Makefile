@@ -12,7 +12,7 @@ $(warning $(MAKEFILE_LIST))
 pack-all: pack-data pack-code pack
 doc: doc/instructions.html
 
-tarflags=--exclude='.git*' --exclude='.build*' --exclude='matconvnet/local' --exclude='*~'
+tarflags=--exclude='.git*' --exclude='.build' --exclude='matconvnet/local' --exclude='*~'
 
 DST := vgg@login.robots.ox.ac.uk:WWW/share
 DSTDOC := vgg@login.robots.ox.ac.uk:WWW/practicals/$(subst practical-,,$(name))
@@ -73,3 +73,12 @@ clean:
 
 distclean: clean
 	rm -f $(TMPDIR)/$(distname)*.tar.gz
+	rm -rf $(TMPDIR)/$(distname)/
+
+info: info-dist
+
+info-dist:
+	@echo "name = $(name)"
+	@echo "ver = $(ver)"
+	@echo "distname = $(distname)"
+	@echo "TMPDIR = $(TMPDIR)"
