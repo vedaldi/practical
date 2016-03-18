@@ -39,7 +39,7 @@ $(TMPDIR)/$(distname).tar.gz: $(deps)
 $(TMPDIR)/$(distname)-data-only.tar.gz: $(deps)
 	rm -rf $(TMPDIR)/$(distname)
 	mkdir -p $(TMPDIR)/$(distname)/{doc,data}
-	ln -sf $(data) $(TMPDIR)/$(distname)/
+	ln -sf $(data) $(TMPDIR)/$(distname)/data/
 	tar -C $(TMPDIR) -czvhf $(TMPDIR)/$(distname)-data-only.tar.gz $(tarflags) $(distname)/
 
 $(TMPDIR)/$(distname)-code-only.tar.gz: $(deps)
