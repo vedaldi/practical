@@ -12,7 +12,7 @@ $(warning $(MAKEFILE_LIST))
 pack-all: pack-data pack-code pack
 doc: doc/instructions.html
 
-tarflags=--exclude='.git*' --exclude='.build' --exclude='matconvnet/local' --exclude='*~'
+tarflags=--exclude='.git*' --exclude='.build' --exclude='local' --exclude='*~'
 
 DST := vgg@login.robots.ox.ac.uk:WWW/share
 DSTDOC := vgg@login.robots.ox.ac.uk:WWW/practicals/$(subst practical-,,$(name))
