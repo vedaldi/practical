@@ -17,6 +17,7 @@ tarflags=--exclude='.git*' --exclude='.build' --exclude='local' --exclude='*~'
 DST := vgg@login.robots.ox.ac.uk:WWW/share
 DSTDOC := vgg@login.robots.ox.ac.uk:WWW/practicals/$(subst practical-,,$(name))
 TMPDIR := /tmp
+PYDIR = $(TMPDIR)/practical-python
 
 distname:=$(name)-$(ver)
 code:=$(addprefix $(CURDIR)/,$(code))
@@ -27,6 +28,11 @@ deps:=$(shell find $(code) $(doc) $(data) -type f | sed "s/ /\\\\ /g")
 pack: $(TMPDIR)/$(distname).tar.gz
 pack-data: $(TMPDIR)/$(distname)-data-only.tar.gz
 pack-code: $(TMPDIR)/$(distname)-code-only.tar.gz
+
+$(PYDIR)/bin/python:
+	virtualenv --no-site-packages $(PYDIR)
+	$(PYDIR)/bin/pip install markdown
+	$(PYDIR)/bin/pip install python-markdown-math
 
 $(TMPDIR)/$(distname).tar.gz: $(deps)
 	rm -rf $(TMPDIR)/$(distname)
@@ -49,12 +55,13 @@ $(TMPDIR)/$(distname)-code-only.tar.gz: $(deps)
 	ln -sf $(code) $(TMPDIR)/$(distname)/
 	tar -C $(TMPDIR) -cvh $(tarflags) $(distname)/ | gzip -n >$(TMPDIR)/$(distname)-code-only.tar.gz
 
-doc/instructions.html : doc/instructions.md doc/base.css doc/prism.js doc/prism.css $(MDIR)/base.html $(MDIR)/end.html $(MDIR)/Makefile
+doc/instructions.html : doc/instructions.md doc/base.css doc/prism.js doc/prism.css $(MDIR)/base.html $(MDIR)/end.html $(MDIR)/Makefile $(PYDIR)/bin/python
 	(cat "$(MDIR)/base.html" ; \
-	python -m markdown \
+	$(PYDIR)/bin/python \
+	  -m markdown \
 	  -x toc -x footnotes -x tables -x fenced_code -x attr_list \
-	  -x mathjax \
-	  -x prism_code \
+	  -x math \
+	  -x prism \
 	  -c "$(MDIR)/markdown-config.json" \
 	  "$<" ; \
 	cat "$(MDIR)/end.html") > "$@"
@@ -77,6 +84,7 @@ clean:
 distclean: clean
 	rm -f $(TMPDIR)/$(distname)*.tar.gz
 	rm -rf $(TMPDIR)/$(distname)/
+	rm -rf $(PYDIR)
 
 info: info-dist
 
