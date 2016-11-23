@@ -16,7 +16,8 @@ tarflags=--exclude='.git*' --exclude='.build' --exclude='local' --exclude='*~'
 
 DST := vgg@login.robots.ox.ac.uk:WWW/share
 DSTDOC := vgg@login.robots.ox.ac.uk:WWW/practicals/$(subst practical-,,$(name))
-TMPDIR := /tmp
+
+TMPDIR ?= /tmp
 PYDIR = $(TMPDIR)/practical-python
 
 distname:=$(name)-$(ver)
