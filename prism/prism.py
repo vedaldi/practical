@@ -21,7 +21,7 @@ class PrismPreprocessor(Preprocessor):
     LANG_TAG = ' class="language-%s"'
 
     def __init__(self, md):
-        super(PrismBlockPreprocessor, self).__init__(md)
+        super(PrismPreprocessor, self).__init__(md)
 
     def run(self, lines):
         text = "\n".join(lines)

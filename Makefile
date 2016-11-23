@@ -33,6 +33,7 @@ $(PYDIR)/bin/python:
 	virtualenv --no-site-packages $(PYDIR)
 	$(PYDIR)/bin/pip install markdown
 	$(PYDIR)/bin/pip install python-markdown-math
+	$(PYDIR)/bin/pip install $(MDIR)/prism
 
 $(TMPDIR)/$(distname).tar.gz: $(deps)
 	rm -rf $(TMPDIR)/$(distname)
