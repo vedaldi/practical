@@ -52,7 +52,9 @@ $(TMPDIR)/$(distname)-code-only.tar.gz: $(deps)
 doc/instructions.html : doc/instructions.md doc/base.css doc/prism.js doc/prism.css $(MDIR)/base.html $(MDIR)/end.html $(MDIR)/Makefile
 	(cat "$(MDIR)/base.html" ; \
 	python -m markdown \
-	  -x toc -x footnotes -x tables -x fenced_code -x attr_list -x mathjax \
+	  -x toc -x footnotes -x tables -x fenced_code -x attr_list \
+	  -x mathjax \
+	  -x prism_code \
 	  -c "$(MDIR)/markdown-config.json" \
 	  "$<" ; \
 	cat "$(MDIR)/end.html") > "$@"
