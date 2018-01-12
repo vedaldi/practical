@@ -2,25 +2,26 @@ html {
     font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
     margin: auto ;
     padding: 4em ;
     max-width: 50em ;
+    font-size: 18px ;
     line-height: 1.6em ;
-    font-size: 16px ;
-    -webkit-font-smoothing: antialiased;
     background-color: rgb(255,255,255);
     color: rgb(51, 51, 51);
 }
 
 a {
-    background: transparent
+    background: transparent;
+    color: rgb(65, 131, 196);
 }
 
 a:focus {
-    outline: thin dotted
+    outline: thin dotted;
 }
 
 a:active, a:hover {
@@ -29,12 +30,11 @@ a:active, a:hover {
 
 h1 {
     font-size: 2.2em;
-    margin: .67em 0 ;
-    line-height: 1.6em ;
+    margin-top: 1em ;
 }
-h2 { font-size: 2.0em ;}
-h3 { font-size: 1.8em ;}
-h4 { font-size: 1.6em ;}
+h2 { font-size: 1.8em ;}
+h3 { font-size: 1.5em ;}
+h4 { font-size: 1.2em ;}
 
 li {
     list-type-style: disc ;
