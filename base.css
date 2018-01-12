@@ -1,5 +1,5 @@
 html {
-    font-family: sans-serif;
+    font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%
 }
@@ -7,8 +7,12 @@ html {
 body {
     margin: auto ;
     padding: 4em ;
-    max-width: 60em ;
-    line-height: 1.35em ;
+    max-width: 50em ;
+    line-height: 1.6em ;
+    font-size: 16px ;
+    -webkit-font-smoothing: antialiased;
+    background-color: rgb(255,255,255);
+    color: rgb(51, 51, 51);
 }
 
 a {
@@ -24,9 +28,16 @@ a:active, a:hover {
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 2.2em;
     margin: .67em 0 ;
-    line-height: 1.2em ;
+    line-height: 1.6em ;
+}
+h2 { font-size: 2.0em ;}
+h3 { font-size: 1.8em ;}
+h4 { font-size: 1.6em ;}
+
+li {
+    list-type-style: disc ;
 }
 
 code {
@@ -36,7 +47,6 @@ code {
   border: 1.5px solid #e0e0e0;
   background-color: #f8f8f8;
   border-radius: 3px;
-  color: #00f ;
 }
 
 pre code {
