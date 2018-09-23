@@ -12,15 +12,11 @@ DST := vgg@login.robots.ox.ac.uk:WWW/share
 TMPDIR ?= /tmp
 
 define pfx
-$(addprefix "$(CURDIR)",$(1))
+$(addprefix "$(CURDIR)/",$(1))
 endef
 
 distname:=$(name)-$(ver)
-#code:=$(addprefix "$(CURDIR)/",$(code))
-#data:=$(addprefix "$(CURDIR)/",$(data))
 deps:=$(shell find $(code) $(data) -type f)
-
-# sed "s/ /\\\\ /g")
 
 pack: $(TMPDIR)/$(distname).tar.gz
 pack-data: $(TMPDIR)/$(distname)-data-only.tar.gz
