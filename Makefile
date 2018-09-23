@@ -12,9 +12,9 @@ DST := vgg@login.robots.ox.ac.uk:WWW/share
 TMPDIR ?= /tmp
 
 distname:=$(name)-$(ver)
-code:=$(addprefix "$(CURDIR)/",$(code))
-data:=$(addprefix "$(CURDIR)/",$(data))
-deps:=$(shell find $(code) $(data) -type f | sed -e 's/^/"/g' -e 's/$$/"/g')
+#code:=$(addprefix "$(CURDIR)/",$(code))
+#data:=$(addprefix "$(CURDIR)/",$(data))
+deps:=$(shell find $(code) $(data) -type f)
 
 # sed "s/ /\\\\ /g")
 
