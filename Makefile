@@ -1,79 +1,44 @@
-.PHONY: prepack, pack, pack-data, pack-code, post, clean, distclean, doc
-
-# install markdown and python-markdown-math
-# pip install --user markdown
-# pip install --user python-markdown-math
+.PHONY: prepack, pack, pack-data, pack-code, post, clean, distclean
 
 SHELL := /bin/bash
 CURRENT_MAKEFILE_LIST := $(MAKEFILE_LIST)
-MDIR := $(dir $(lastword $(CURRENT_MAKEFILE_LIST)))
-$(warning $(MAKEFILE_LIST))
 
 pack-all: pack-data pack-code pack
-doc: doc/instructions.html
 
 tarflags=--exclude='.git*' --exclude='.build' --exclude='local' --exclude='*~'
 
 DST := vgg@login.robots.ox.ac.uk:WWW/share
-DSTDOC := vgg@login.robots.ox.ac.uk:WWW/practicals/$(subst practical-,,$(name))
 
 TMPDIR ?= /tmp
-PYDIR = $(TMPDIR)/practical-python
 
 distname:=$(name)-$(ver)
-code:=$(addprefix $(CURDIR)/,$(code))
-data:=$(addprefix $(CURDIR)/,$(data))
-doc:=$(addprefix $(CURDIR)/,$(doc))
-deps:=$(shell find $(code) $(doc) $(data) -type f | sed "s/ /\\\\ /g")
+code:=$(addprefix "$(CURDIR)/",$(code))
+data:=$(addprefix "$(CURDIR)/",$(data))
+deps:=$(shell find $(code) $(data) -type f | sed -e 's/^/"/g' -e 's/$$/"/g')
+
+# sed "s/ /\\\\ /g")
 
 pack: $(TMPDIR)/$(distname).tar.gz
 pack-data: $(TMPDIR)/$(distname)-data-only.tar.gz
 pack-code: $(TMPDIR)/$(distname)-code-only.tar.gz
 
-$(PYDIR)/bin/python:
-	virtualenv --no-site-packages $(PYDIR)
-	$(PYDIR)/bin/pip install markdown
-	$(PYDIR)/bin/pip install python-markdown-math
-	$(PYDIR)/bin/pip install $(MDIR)/prism
-
 $(TMPDIR)/$(distname).tar.gz: $(deps)
 	rm -rf $(TMPDIR)/$(distname)
-	mkdir -p $(TMPDIR)/$(distname)/{doc,data}
+	mkdir -p $(TMPDIR)/$(distname)/data
 	ln -sf $(data) $(TMPDIR)/$(distname)/data/
-	ln -sf $(doc) $(TMPDIR)/$(distname)/doc/
 	ln -sf $(code) $(TMPDIR)/$(distname)/
 	tar -C $(TMPDIR) -cvh $(tarflags) $(distname)/ | gzip -n >$(TMPDIR)/$(distname).tar.gz
 
 $(TMPDIR)/$(distname)-data-only.tar.gz: $(deps)
 	rm -rf $(TMPDIR)/$(distname)
-	mkdir -p $(TMPDIR)/$(distname)/{doc,data}
-	ln -sf $(data) $(TMPDIR)/$(distname)/data/
+	mkdir -p $(TMPDIR)/$(distname)/data
 	tar -C $(TMPDIR) -cvh $(tarflags) $(distname)/ | gzip -n >$(TMPDIR)/$(distname)-data-only.tar.gz 
 
 $(TMPDIR)/$(distname)-code-only.tar.gz: $(deps)
 	rm -rf $(TMPDIR)/$(distname)
-	mkdir -p $(TMPDIR)/$(distname)/{doc,data}
-	ln -sf $(doc) $(TMPDIR)/$(distname)/doc/
+	mkdir -p $(TMPDIR)/$(distname)/data
 	ln -sf $(code) $(TMPDIR)/$(distname)/
 	tar -C $(TMPDIR) -cvh $(tarflags) $(distname)/ | gzip -n >$(TMPDIR)/$(distname)-code-only.tar.gz
-
-doc/instructions.html : doc/instructions.md doc/base.css doc/prism.js doc/prism.css $(MDIR)/base.html $(MDIR)/end.html $(MDIR)/Makefile $(PYDIR)/bin/python
-	(cat "$(MDIR)/base.html" ; \
-	$(PYDIR)/bin/python \
-	  -m markdown \
-	  -x toc -x footnotes -x tables -x fenced_code -x attr_list \
-	  -x math \
-	  -x prism \
-	  -c "$(MDIR)/markdown-config.json" \
-	  "$<" ; \
-	cat "$(MDIR)/end.html") > "$@"
-
-doc/%: $(MDIR)/%
-	cp -f "$(<)" "$(@)"
-
-post-doc: doc
-	rsync -rvt doc/images doc/base.css doc/prism.css doc/prism.js "$(DSTDOC)/"
-	rsync -vt doc/instructions.html "$(DSTDOC)/index.html"
 
 post: pack-all
 	rsync -vt "$(TMPDIR)/$(distname).tar.gz" "$(DST)/"
@@ -91,7 +56,8 @@ distclean: clean
 info: info-dist
 
 info-dist:
-	@echo "name = $(name)"
-	@echo "ver = $(ver)"
-	@echo "distname = $(distname)"
-	@echo "TMPDIR = $(TMPDIR)"
+	@echo deps = $(deps)
+	@echo name = $(name)
+	@echo ver = $(ver)
+	@echo distname = "$(distname)"
+	@echo TMPDIR = "$(TMPDIR)"
