@@ -51,7 +51,6 @@ clean:
 distclean: clean
 	rm -f $(TMPDIR)/$(distname)*.tar.gz
 	rm -rf $(TMPDIR)/$(distname)/
-	rm -rf $(PYDIR)
 
 info: info-dist
 
