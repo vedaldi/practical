@@ -11,6 +11,10 @@ DST := vgg@login.robots.ox.ac.uk:WWW/share
 
 TMPDIR ?= /tmp
 
+define pfx
+$(addprefix "$(CURDIR)",$(1))
+endef
+
 distname:=$(name)-$(ver)
 #code:=$(addprefix "$(CURDIR)/",$(code))
 #data:=$(addprefix "$(CURDIR)/",$(data))
@@ -25,19 +29,20 @@ pack-code: $(TMPDIR)/$(distname)-code-only.tar.gz
 $(TMPDIR)/$(distname).tar.gz: $(deps)
 	rm -rf $(TMPDIR)/$(distname)
 	mkdir -p $(TMPDIR)/$(distname)/data
-	ln -sf $(data) $(TMPDIR)/$(distname)/data/
-	ln -sf $(code) $(TMPDIR)/$(distname)/
+	ln -sf $(call pfx, $(data)) $(TMPDIR)/$(distname)/data/
+	ln -sf $(call pfx, $(code)) $(TMPDIR)/$(distname)/
 	tar -C $(TMPDIR) -cvh $(tarflags) $(distname)/ | gzip -n >$(TMPDIR)/$(distname).tar.gz
 
 $(TMPDIR)/$(distname)-data-only.tar.gz: $(deps)
 	rm -rf $(TMPDIR)/$(distname)
 	mkdir -p $(TMPDIR)/$(distname)/data
+	ln -sf $(call pfx, $(data)) $(TMPDIR)/$(distname)/data/
 	tar -C $(TMPDIR) -cvh $(tarflags) $(distname)/ | gzip -n >$(TMPDIR)/$(distname)-data-only.tar.gz 
 
 $(TMPDIR)/$(distname)-code-only.tar.gz: $(deps)
 	rm -rf $(TMPDIR)/$(distname)
 	mkdir -p $(TMPDIR)/$(distname)/data
-	ln -sf $(code) $(TMPDIR)/$(distname)/
+	ln -sf $(call pfx, $(code)) $(TMPDIR)/$(distname)/
 	tar -C $(TMPDIR) -cvh $(tarflags) $(distname)/ | gzip -n >$(TMPDIR)/$(distname)-code-only.tar.gz
 
 post: pack-all
