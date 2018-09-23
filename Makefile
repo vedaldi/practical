@@ -41,9 +41,9 @@ $(TMPDIR)/$(distname)-code-only.tar.gz: $(deps)
 	tar -C $(TMPDIR) -cvh $(tarflags) $(distname)/ | gzip -n >$(TMPDIR)/$(distname)-code-only.tar.gz
 
 post: pack-all
-	rsync -vt "$(TMPDIR)/$(distname).tar.gz" "$(DST)/"
-	rsync -vt "$(TMPDIR)/$(distname)-data-only.tar.gz" "$(DST)/"
-	rsync -vt "$(TMPDIR)/$(distname)-code-only.tar.gz" "$(DST)/"
+	rsync -vt --progress "$(TMPDIR)/$(distname).tar.gz" "$(DST)/"
+	rsync -vt --progress "$(TMPDIR)/$(distname)-data-only.tar.gz" "$(DST)/"
+	rsync -vt --progress "$(TMPDIR)/$(distname)-code-only.tar.gz" "$(DST)/"
 
 clean:
 	find . -name '*~' -delete
